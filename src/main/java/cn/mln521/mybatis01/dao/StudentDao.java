@@ -1,12 +1,14 @@
 package cn.mln521.mybatis01.dao;
 
 import cn.mln521.mybatis01.entity.Student;
+import cn.mln521.mybatis01.utils.SqlSessionFactoryUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @Descripton TODO
@@ -21,47 +23,52 @@ public class StudentDao {
      * @return
      */
     public Student selectStudentById(int id) {
-
-        InputStream inputStream = null;
-        SqlSessionFactory sqlSessionFactory = null;
-        SqlSession session = null;
-        Student student = null;
-        try {
-            //使用类加载器加载mybatis的配置文件（它也加载关联的映射文件）
-            inputStream = StudentDao.class.getClassLoader().getResourceAsStream("conf.xml");
-            //构建sqlSession的工厂
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-            //使用MyBatis提供的Resources类加载mybatis的配置文件（它也加载关联的映射文件）
-            //Reader reader = Resources.getResourceAsReader(resource);
-            //构建sqlSession的工厂
-            //SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader);
-
-            //创建能执行映射文件中sql的sqlSession
-            session = sqlSessionFactory.openSession();
-            /**
-             * 映射sql的标识字符串，
-             * com.zhangguo.mybatis01.dao.studentMapper是studentMapper.xml文件中mapper标签的namespace属性的值，
-             * selectStudentById是select标签的id属性值，通过select标签的id属性值就可以找到要执行的SQL
-             */
-            student = session.selectOne("cn.mln521.mybatis01.dao.studentMapper.selectStudentById", id);
-
-        }
-        finally {
-            if (session != null) {
-                // 关闭会话
-                session.close();
-            }
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
+        SqlSession session = SqlSessionFactoryUtils.getSession(true);
+        Student student = session.selectOne("cn.mln521.mybatis01.dao.studentMapper.selectStudentById", id);
         return student;
 
     }
 
+    /**
+     * 根据学生姓名模糊查询
+     * @param name
+     * @return
+     */
+    public List<Student> selectStudnetsByName(String name) {
+        SqlSession session = SqlSessionFactoryUtils.getSession(true);
+        List<Student> stuList = session.selectList("cn.mln521.mybatis01.dao.studentMapper.selectStudnetsByName", name);
+        return stuList;
+    }
+
+    /**
+     * 添加学生
+     * @param student
+     * @return
+     */
+    public int insertStudent(Student student) {
+        SqlSession session = SqlSessionFactoryUtils.getSession(true);
+        int rows = session.insert("cn.mln521.mybatis01.dao.studentMapper.insertStudent", student);
+        return rows;
+    }
+    /**
+     * 更改学生信息
+     * @param student
+     * @return
+     */
+    public int updateStudent(Student student) {
+        SqlSession session = SqlSessionFactoryUtils.getSession(true);
+        int rows = session.insert("cn.mln521.mybatis01.dao.studentMapper.updateStudent", student);
+        return rows;
+    }
+
+    /**
+     * 删除学生信息
+     * @param i
+     * @return
+     */
+    public int deleteStudent(int i) {
+        SqlSession session = SqlSessionFactoryUtils.getSession(true);
+        int rows = session.insert("cn.mln521.mybatis01.dao.studentMapper.deleteStudent", i);
+        return rows;
+    }
 }

@@ -12,9 +12,36 @@ resultType="com.zhangguo.mybatis01.entities.Student"就表示将查询结果封�
 Student类就是student表所对应的实体类
 -->
     <!--
-    根据id查询得到一个user对象
- -->
+        根据id查询得到一个user对象
+     -->
     <select id="selectStudentById" resultType="cn.mln521.mybatis01.entity.Student">
         select * from student where id = #{id}
     </select>
+
+    <!--
+        根据名字模糊查询学生
+    -->
+    <select id="selectStudnetsByName" resultType="cn.mln521.mybatis01.entity.Student">
+        select id,name,sex from student where name like '%${value}%'
+    </select>
+
+    <!--
+       增加学生
+   -->
+    <insert id="insertStudent" parameterType="cn.mln521.mybatis01.entity.Student">
+        insert into student(name,sex) values(#{name}, '${sex}')
+    </insert>
+    <!--
+       更改学生信息
+   -->
+    <update id="updateStudent" parameterType="cn.mln521.mybatis01.entity.Student">
+        update student set name = #{name},sex = #{sex} where id = #{id}
+    </update>
+    <!--
+       删除学生信息
+   -->
+    <delete id="deleteStudent" parameterType="int">
+        delete from student where id = #{id}
+    </delete>
+
 </mapper>

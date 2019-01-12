@@ -37,14 +37,17 @@ public class StudentDao {
          * com.zhangguo.mybatis01.dao.studentMapper是studentMapper.xml文件中mapper标签的namespace属性的值，
          * selectStudentById是select标签的id属性值，通过select标签的id属性值就可以找到要执行的SQL
          */
-        Student student = session.selectOne("cn.mln521.mybatis01.dao.studentMapper.selectStudentById", 1);
+        Student student = session.selectOne("cn.mln521.mybatis01.dao.studentMapper.selectStudentById", id);
+
+        // 关闭会话
+        session.close();
         return student;
 
     }
 
-    public static void main(String[] args) {
-        StudentDao studentDao = new StudentDao();
-        Student student = studentDao.selectStudentById(1);
-        System.out.println(student);
-    }
+//    public static void main(String[] args) {
+//        StudentDao studentDao = new StudentDao();
+//        Student student = studentDao.selectStudentById(1);
+//        System.out.println(student);
+//    }
 }
